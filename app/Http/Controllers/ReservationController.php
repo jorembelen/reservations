@@ -46,7 +46,7 @@ class ReservationController extends Controller
     {
         $greetings = "";
         date_default_timezone_set('Asia/Riyadh');
-        
+
         /* This sets the $time variable to the current hour in the 24 hour clock format */
         $time = date("H");
 
@@ -92,40 +92,40 @@ class ReservationController extends Controller
                    ->where('finish_time', '<', $end)
                    ->where('date',  $bookDate)
                    ->where('room_id',  $room_id);
-        
+
             })->orWhere(function ($q) use ($bookDate, $room_id, $start, $end) {
                 $q->where('start_time', '<=', $start)
                    ->where('finish_time', '>', $end)
                    ->where('date',  $bookDate)
                    ->where('room_id',  $room_id);
-        
+
             })->orWhere(function ($q) use ($bookDate, $room_id, $start, $end) {
                 $q->where('finish_time', '>', $start)
                    ->where('finish_time', '<=', $end)
                    ->where('date',  $bookDate)
                    ->where('room_id',  $room_id);
-        
+
             })->orWhere(function ($q) use ($bookDate, $room_id, $start, $end) {
                 $q->where('start_time', '>=', $start)
                    ->where('finish_time', '<=', $end)
                    ->where('date',  $bookDate)
                    ->where('room_id',  $room_id);
             });
-        
+
         })->exists();
         if ($conflict) {
             Alert::error('Error', 'Sorry, selected schedule is not available!.');
             return redirect()->back();
         }
      }
-    
+
      $creator = 'Reserved by: ' .auth()->user()->name;
      $location = 'Facility: ' .Room::find($request->room_id)->name;
      $schedule = 'Reserved on: '.date('M-d-Y', strtotime($request->date)).', '.date('h:i A', strtotime($request->start_time)).' to '.date('h:i A', strtotime($request->finish_time));
      $notes = 'Meeting Description: '.$request->remarks;
-     
-    //  $admin = User::whererole(1)->get();
-     $admin = User::all();
+
+     $admin = User::whererole(1)->get();
+    //  $admin = User::all();
      $user = auth()->user();
 
          $details = [
@@ -145,10 +145,10 @@ class ReservationController extends Controller
              'schedule' =>  $schedule,
              'notes' =>  $notes,
          ];
-         
+
         Reservation::create($request->all());
         Alert::toast('Reservation was created successfully!', 'success');
-         
+
         \Notification::send($admin, new AdminNotification($adminDetails));
 
        return back();
