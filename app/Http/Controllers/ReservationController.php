@@ -124,8 +124,8 @@ class ReservationController extends Controller
      $schedule = 'Reserved on: '.date('M-d-Y', strtotime($request->date)).', '.date('h:i A', strtotime($request->start_time)).' to '.date('h:i A', strtotime($request->finish_time));
      $notes = 'Meeting Description: '.$request->remarks;
 
-     $admin = User::whererole(1)->get();
-    //  $admin = User::all();
+    //  $admin = User::whererole(1)->get();
+     $admin = User::all();
      $user = auth()->user();
 
          $details = [
