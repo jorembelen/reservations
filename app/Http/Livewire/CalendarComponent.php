@@ -26,8 +26,8 @@ class CalendarComponent extends Component
         $rooms = Room::all();
         $reservations = Reservation::where('date', '>', $modifiedToday)->get()->map(function ($reservation) {
             $date = $reservation->date->format('Y-m-d');
-            $start = $reservation->start_time->format('h:i');
-            $end = $reservation->finish_time->format('h:i');
+            $start = $reservation->start_time->format('H:i');
+            $end = $reservation->finish_time->format('H:i');
             return [
                 'title' => $reservation->room->name,
                 'start' => $date .' '. $start,
