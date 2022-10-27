@@ -28,8 +28,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [HomeController::class, 'home']);
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function(){
-    
-Route::get('dashboard', [HomeController::class, 'index']);
+
+Route::get('dashboard', [HomeController::class, 'index'])->name('dashboard');
 Route::resource('rooms', RoomController::class);
 Route::resource('reservations', ReservationController::class);
 Route::resource('users', UserController::class);

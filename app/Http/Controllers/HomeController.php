@@ -22,12 +22,6 @@ class HomeController extends Controller
 
     public function index()
     {
-        $today = Carbon::now();
-        $modifiedToday = $today->add(-1, 'day');
-
-        $rooms = Room::all();
-        $reservations = Reservation::latest()->get();
-
-        return view('dashboard', compact('rooms', 'reservations', 'modifiedToday'));
+        return view('dashboard');
     }
 }

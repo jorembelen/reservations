@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('title', 'Update')
-@section('content') 
+@section('content')
 
 <div class="row">
     <div class="col-3"></div>
@@ -28,19 +28,19 @@
                 <div class="form-group row">
                     <label for="name" class="col-md-3 mt-1 ml-1 col-form-label">Date</label>
                     <div class="col-md-8 mt-1">
-                        <input type="text" class="form-control" name="date" value="{{ $reservation->date }}" placeholder="date" id="dateTimeFlatpickr2">
+                        <input type="text" class="form-control" name="date" value="{{ $reservation->date->format('Y-m-d') }}" placeholder="date" id="dateTimeFlatpickr2">
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="name" class="col-md-3 mt-1 ml-1 col-form-label">Start Time</label>
                     <div class="col-md-8 mt-1">
-                        <input type="text" class="form-control" name="start_time" value="{{ $reservation->start_time }}" placeholder="date" id="timeFlatpickr">
+                        <input type="text" class="form-control" name="start_time" value="{{ $reservation->start_time->format('H:i') }}" placeholder="date" id="timeFlatpickr">
                     </div>
                 </div>
                 <div class="form-group row">
                     <label for="name" class="col-md-3 mt-1 ml-1 col-form-label">Finish Time</label>
                     <div class="col-md-8 mt-1">
-                        <input type="text" class="form-control" name="finish_time" value="{{ $reservation->finish_time }}" placeholder="date" id="timeFlatpickr2">
+                        <input type="text" class="form-control" name="finish_time" value="{{ $reservation->finish_time->format('H:i') }}" placeholder="date" id="timeFlatpickr2">
                     </div>
                 </div>
 
