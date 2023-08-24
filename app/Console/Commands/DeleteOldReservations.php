@@ -38,7 +38,6 @@ class DeleteOldReservations extends Command
      */
     public function handle()
     {
-        $reservations = Reservation::with('room', 'user')->where('date', '<', now()->subMonth())->count();
-        dd($reservations);
+        return Reservation::with('room', 'user')->where('date', '<', now()->subMonth())->delete();
     }
 }
