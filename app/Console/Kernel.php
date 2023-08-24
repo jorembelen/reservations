@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('reservations:delete')->weekly();
+        $schedule->command('reservations:delete')->everyMinute();
     }
 
     /**
