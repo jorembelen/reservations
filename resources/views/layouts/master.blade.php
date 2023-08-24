@@ -40,6 +40,7 @@
 
 						@yield('content')
 						@include('sweetalert::alert')
+						@include('scripts.toastr')
 
 				</div>
 			</main>
