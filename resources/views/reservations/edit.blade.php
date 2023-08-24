@@ -1,58 +1,82 @@
-@extends('layouts.master')
-
-@section('title', 'Update')
-@section('content')
-
-<div class="row">
-    <div class="col-3"></div>
-<div class="col-xl-6">
-    <div class="card">
-        <div class="card-header">
-            <h3 class="text-center">Update {{ $reservation->room->name }}</h3>
-        </div>
-        <div class="card-body">
-            <form class="form-horizontal form-disabled-button" method="POST" action="{{ route('reservations.update', $reservation->id) }}" id="res-create">
-                @csrf
-                <input type="hidden" name="_method" value="PUT">
-                <div class="form-group row">
-                    <label for="name" class="col-md-3 mt-1 ml-1 col-form-label">Room Name</label>
-                    <div class="col-md-8 mt-1">
-                        <select class="form-control select2" name="room_id">
-                            <option value="{{ $reservation->room_id }}">{{ $reservation->room->name }}</option>
-                            @foreach ($rooms as $room)
-                            <option value="{{ $room->id }}">{{ $room->name }}</option>
-                            @endforeach
-                        </select>
+<!-- BEGIN MODAL -->
+<div class="modal fade" id="create" wire:ignore.self>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><strong>Add New Reservation</strong></h4>
+            </div>
+            <div class="modal-body">
+                <div class="basic-form">
+                    <form wire:submit.prevent="submit('{{ $reservationId }}')">
+                        <div class="form-group">
+                            <select class="form-control select2" wire:model.defer="state.room_id">
+                                <option value="">Select Rooms . . .</option>
+                                @foreach ($rooms as $room)
+                                <option value="{{ $room->id }}">{{ $room->name }}</option>
+                                @endforeach
+                            </select>
+                            @error('room_id')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                        </div>
+                        <div class="form-group">
+                            <input type="text" class="form-control input-rounded" wire:model.defer="state.date" placeholder="reservation date" id="dateTimeFlatpickr2">
+                            @error('date')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                        </div>
+                            <div class="form-group clockpicker" data-placement="bottom" data-align="top" data-autoclose="true">
+                            <input type="text" class="form-control input-rounded" wire:model.defer="state.start_time" placeholder="Start Time" id="timeFlatpickr">
+                            @error('start_time')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                        </div>
+                            <div class="form-group clockpicker" data-placement="bottom" data-align="top" data-autoclose="true">
+                            <input type="text" class="form-control input-rounded" wire:model.defer="state.finish_time" placeholder="Finish Time" id="timeFlatpickr2">
+                            @error('finish_time')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                        </div>
+                        <div class="form-group">
+                            <textarea wire:model.defer="state.remarks" class="form-control input-rounded"></textarea>
+                        </div>
+                        <div class="form-group clockpicker" data-placement="bottom" data-align="top" data-autoclose="true">
+                            <label for="finish">Add Email for CC</label>
+                            <div wire:ignore>
+                                <input type="text" class="form-control mb-2" wire:model.defer="emails" placeholder="add email for cc">
+                                <span class="font-13 text-primary">Please separate emails with comma(,)</span>
+                            </div>
+                            @error('emails')
+                            <div class="text-danger">
+                                {{ $message }}
+                            </div>
+                            @enderror
+                        </div>
                     </div>
-                </div>
-                <div class="form-group row">
-                    <label for="name" class="col-md-3 mt-1 ml-1 col-form-label">Date</label>
-                    <div class="col-md-8 mt-1">
-                        <input type="text" class="form-control" name="date" value="{{ $reservation->date->format('Y-m-d') }}" placeholder="date" id="dateTimeFlatpickr2">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="name" class="col-md-3 mt-1 ml-1 col-form-label">Start Time</label>
-                    <div class="col-md-8 mt-1">
-                        <input type="text" class="form-control" name="start_time" value="{{ $reservation->start_time->format('H:i') }}" placeholder="date" id="timeFlatpickr">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <label for="name" class="col-md-3 mt-1 ml-1 col-form-label">Finish Time</label>
-                    <div class="col-md-8 mt-1">
-                        <input type="text" class="form-control" name="finish_time" value="{{ $reservation->finish_time->format('H:i') }}" placeholder="date" id="timeFlatpickr2">
-                    </div>
-                </div>
-
                 </div>
                 <div class="modal-footer">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated spinner-prevent" role="status" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">Submitting . . .</div>
-                    <button type="submit" class="btn btn-dark waves-effect waves-light disabled-button-prevent">Submit</button>
-                    <a href="{{ \URL::previous() }}" type="button" class="btn btn-danger waves-effect disabled-button-prevent">Cancel</a>
-                </form>
+                    <div wire:loading wire:target="submit" class="progress-bar progress-bar-striped progress-bar-animated"
+                    role="status" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
+                    Processing . . .</div>
+                <div wire:loading wire:target="close"
+                    class="progress-bar progress-bar-striped progress-bar-animated mb-2" role="status"
+                    style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">Cancelling . . .</div>
+
+                <div wire:loading.remove>
+                    <button type="submit" class="btn btn-dark waves-effect waves-light">Submit</button>
+                    <button type="button" class="btn btn-danger waves-effect" wire:click.prevent="close">Close
+                    </button>
+                </div>
+                </div>
+            </form>
         </div>
     </div>
-</div>
-<div class="col-3"></div>
-</div>
-@endsection
+  </div>

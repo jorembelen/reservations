@@ -20,10 +20,9 @@ class ReservationController extends Controller
      */
     public function index()
     {
-        $rooms = Room::all();
-        $reservations = Reservation::all();
+        
 
-        return view('reservations.index', compact('reservations', 'rooms'));
+        return view('reservations.index');
     }
 
     /**
