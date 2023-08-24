@@ -24,7 +24,7 @@
     @livewireStyles
 </head>
 
-<body data-theme="light" data-layout="fluid" data-sidebar-position="left" data-sidebar-behavior="compact">
+<body data-theme="light" data-layout="fluid" data-sidebar-position="left">
 	<div class="wrapper">
 
         @include('includes.sidebar')
